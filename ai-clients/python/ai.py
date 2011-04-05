@@ -36,7 +36,11 @@ class AI:
 
 	def wind(self, x, y):
 		print "Sending WIND", x, y
-		self.s.send('WIND %s %s' % (x,y))
+
+		try:
+			self.s.send('WIND %s %s' % (x,y))
+		except socket.error:
+			pass
 		'''
 		while 1:
 			status = self.s.recv(1024)
@@ -52,7 +56,12 @@ class AI:
 
 	def getState(self):
 		print "Sending GET_STATE"
-		self.s.send('GET_STATE')
+
+		try:
+			self.s.send('GET_STATE')
+		except Exception, e:
+			print e #>>sys.stderr, e
+			sys.exit(1)
 
 		currentState = self.s.recv(1024)
 		raw = currentState.split('\n')
