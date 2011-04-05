@@ -18,6 +18,8 @@ v1.0
 [ ] - check for LiberationMono-Bold.ttf in system font path, if not download?
 [ ] - fix human keyboard input - vapor clouds spawns inside itself when a cloud moves
 [ ] - Save level support
+[ ] - fix play-rounds.sh, so name var. takes names with space in it
+[ ] - fix memory leak(s).. chugging up ram while playing
 
 v1.1:
 [ ] - log games
@@ -25,3 +27,5 @@ v1.1:
 [ ] - split up the code into classes
 [ ] - change the cloud array to vector
 [ ] - add support for hoding down keys (wsad,arrow keys) for longer wind strenght
+[ ] - add particle effects on blowing wind
+[ ] - animate background
