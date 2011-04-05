@@ -1118,12 +1118,21 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
+			SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
+
 			if((player1 == "AI") && (player2 == "AI")) {
-				winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
-				drawSurface((width/2)-waitingP1.length()*7.5, height/2-20, winner, screen);
-				winner = TTF_RenderText_Solid(fontWaiting, waitingP2.c_str(), textColor);
-				drawSurface((width/2)-waitingP2.length()*7.5, height/2+20, winner, screen);
-			} else if(player1 == "AI") {
+				if(playerCount != 1) {
+					winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
+					drawSurface((width/2)-waitingP1.length()*7.5, height/2-20, winner, screen);
+				}
+
+				if(playerCount != 2) {
+					winner = TTF_RenderText_Solid(fontWaiting, waitingP2.c_str(), textColor);
+					drawSurface((width/2)-waitingP2.length()*7.5, height/2+20, winner, screen);
+				}
+			}
+
+			else if(player1 == "AI") {
 				winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
 				drawSurface((width/2)-waitingP1.length()*7.5, height/2, winner, screen);
 			} else if(player2 == "AI") {
