@@ -658,7 +658,7 @@ int server(void *data) {
 
 						// YOU x\n
 						std::stringstream you;
-						you << "YOU " << clientNumber+1 << std::endl;
+						you << "YOU " << clientNumber << std::endl;
 						std::string You = you.str();
 						
 						strcpy(buffer, You.c_str());
