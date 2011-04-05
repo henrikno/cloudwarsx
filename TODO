@@ -1,0 +1,4 @@
+TODO
+
+[ ] - Disconnect abusive clients (GET_STATE maximum of 10 times per second)
+[ ] - Support 4 players

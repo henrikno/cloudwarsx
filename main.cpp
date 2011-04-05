@@ -57,6 +57,7 @@ const unsigned short MAX_CLIENTS = MAX_SOCKETS - 1;
 
 int clientCount = 0;
 int playerCount = 0;
+int aiPlayers = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Objects
@@ -531,7 +532,6 @@ void wind(int player, std::string way) {
 ////////////////////////////////////////////////////////////////////////////////
 // Server Thread
 ////////////////////////////////////////////////////////////////////////////////
-
 int server(void *data) {
 	IPaddress serverIP;
 	TCPsocket serverSocket;
@@ -540,7 +540,8 @@ int server(void *data) {
 
 	char buffer[BUFFER_SIZE];
 	int receivedByteCount = 0;
-	bool shutdownServer = false;
+
+	bool playersConnected = false;
 
 	SDLNet_Init();
 	SDLNet_SocketSet socketSet = SDLNet_AllocSocketSet(MAX_SOCKETS);
@@ -556,7 +557,7 @@ int server(void *data) {
 	serverSocket = SDLNet_TCP_Open(&serverIP);
 	SDLNet_TCP_AddSocket(socketSet, serverSocket);
 
-	std::cout << "Waiting for clients to connect..." << std::endl;
+	std::cout << "Waiting for client(s) to connect..." << std::endl;
  
 	do {
 		int numActiveSockets = SDLNet_CheckSockets(socketSet, 0);
@@ -592,8 +593,22 @@ int server(void *data) {
 			}
 		}
 
+
 		for(int clientNumber = 0; clientNumber < MAX_CLIENTS; clientNumber++) {
 			int clientSocketActivity = SDLNet_SocketReady(clientSocket[clientNumber]);
+
+			// START
+			if(!playersConnected) {
+				if(clientCount == aiPlayers) {
+					for(int i = 0; i < aiPlayers; i++) {
+						std::cout << "Sending: START to client " << i << std::endl;
+						strcpy(buffer, "START\n");
+						int msgLength = strlen(buffer);
+						SDLNet_TCP_Send(clientSocket[i], (void *)buffer, msgLength);
+					}
+					playersConnected = true;
+				}
+			}
 
 			if(clientSocketActivity != 0) {
 				receivedByteCount = SDLNet_TCP_Recv(clientSocket[clientNumber], buffer, BUFFER_SIZE);
@@ -627,12 +642,8 @@ int server(void *data) {
 					// NAME
 					if(v[0] == "NAME") {
 						std::cout << "Client " << clientNumber << " name: " << v[1] << std::endl;
-						cloud[0]->name = v[1];
-						std::cout << "Sending: START" << std::endl;
+						cloud[clientNumber]->name = v[1];
 						++playerCount;
-						strcpy(buffer, "START\n");
-						int msgLength = strlen(buffer);
-						SDLNet_TCP_Send(clientSocket[clientNumber], (void *)buffer, msgLength);
 					}
 
 					// GET_STATE
@@ -647,7 +658,7 @@ int server(void *data) {
 
 						// YOU x\n
 						std::stringstream you;
-						you << "YOU " << 1 << std::endl;
+						you << "YOU " << clientNumber+1 << std::endl;
 						std::string You = you.str();
 						
 						strcpy(buffer, You.c_str());
@@ -689,7 +700,7 @@ int server(void *data) {
 						x = atoi(v[1].c_str());
 						y = atoi(v[2].c_str());
 
-						if(wind(0, x, y)) {
+						if(wind(clientNumber, x, y)) {
 							strcpy(buffer, "IGNORE\n");
 							int msgLength = strlen(buffer);
 							SDLNet_TCP_Send(clientSocket[clientNumber], (void *)buffer, msgLength);
@@ -965,6 +976,7 @@ int main(int argc, char* argv[]) {
 		cloud[0]->type = ai;
 		cloud[0]->player = 1;
 		cloud[0]->color = "blue";
+		++aiPlayers;
 	} else {
 		std::cout << "Error: Player 1 not defined!" << std::endl;
 		usage();
@@ -986,6 +998,7 @@ int main(int argc, char* argv[]) {
 		cloud[1]->type = ai;
 		cloud[1]->player = 2;
 		cloud[1]->color = "red";
+		++aiPlayers;
 	} else {
 		std::cout << "Error: Player 2 not defined!" << std::endl;
 		usage();
@@ -1153,7 +1166,7 @@ int main(int argc, char* argv[]) {
 // Game loop
 ////////////////////////////////////////////////////////////////////////////////
 	std::cout << "Game start!" << std::endl;
-
+	
 	// Play music loop
 	if(!nosound) {
 		channel = Mix_PlayChannel(-1, music, -1);
