@@ -17,6 +17,7 @@ v1.0
 [ ] - the players name is lagging (1 px?) behind the cloud?
 [ ] - check for LiberationMono-Bold.ttf in system font path, if not download?
 [ ] - fix human keyboard input - vapor clouds spawns inside itself when a cloud moves
+[ ] - Save level support
 
 v1.1:
 [ ] - log games
