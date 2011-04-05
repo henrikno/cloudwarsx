@@ -597,19 +597,6 @@ int server(void *data) {
 		for(int clientNumber = 0; clientNumber < MAX_CLIENTS; clientNumber++) {
 			int clientSocketActivity = SDLNet_SocketReady(clientSocket[clientNumber]);
 
-			// START
-			if(!playersConnected) {
-				if(clientCount == aiPlayers) {
-					for(int i = 0; i < aiPlayers; i++) {
-						std::cout << "Sending: START to client " << i << std::endl;
-						strcpy(buffer, "START\n");
-						int msgLength = strlen(buffer);
-						SDLNet_TCP_Send(clientSocket[i], (void *)buffer, msgLength);
-					}
-					playersConnected = true;
-				}
-			}
-
 			if(clientSocketActivity != 0) {
 				receivedByteCount = SDLNet_TCP_Recv(clientSocket[clientNumber], buffer, BUFFER_SIZE);
 
@@ -644,6 +631,19 @@ int server(void *data) {
 						std::cout << "Client " << clientNumber << " name: " << v[1] << std::endl;
 						cloud[clientNumber]->name = v[1];
 						++playerCount;
+					}
+
+					// START
+					if(!playersConnected) {
+						if(clientCount == aiPlayers) {
+							for(int i = 0; i < aiPlayers; i++) {
+								std::cout << "Sending: START to client " << i << std::endl;
+								strcpy(buffer, "START\n");
+								int msgLength = strlen(buffer);
+								SDLNet_TCP_Send(clientSocket[i], (void *)buffer, msgLength);
+							}
+							playersConnected = true;
+						}
 					}
 
 					// GET_STATE
