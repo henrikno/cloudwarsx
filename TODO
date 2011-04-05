@@ -1,4 +1,24 @@
 TODO
 
+v1.0
 [ ] - Disconnect abusive clients (GET_STATE maximum of 10 times per second)
-[ ] - Support 4 players
+[ ] - Support up to 4 players
+[ ] - Error checking on SDL* init
+[ ] - add music and sound effects
+[ ] - add code for dead cloud sound effect
+[ ] - don't let thunderstorms (and rainclouds) spawn on top of each other 
+[ ] - add the wind debug code to the cloud class? It's only supporting one cloud now 
+[ ] - if p1 and p2 is AI - hide the mouse cursor
+[ ] - swap std::string player1, player2 with some code in the cloud class
+[ ] - Give rainclouds name based on pos. in array and print name in debug mode
+[ ] - change the ttf draw surface code for finding the middle of the screen from .length() to surface->w
+[ ] - the players name is lagging (1 px?) behind the cloud?
+[ ] - check for LiberationMono-Bold.ttf in system font path, if not download?
+[ ] - fix human keyboard input - vapor clouds spawns inside itself when a cloud moves
+
+v1.1:
+[ ] - log games
+[ ] - replay log
+[ ] - split up the code into classes
+[ ] - change the cloud array to vector
+[ ] - add support for hoding down keys (wsad,arrow keys) for longer wind strenght
