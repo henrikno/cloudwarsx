@@ -1166,7 +1166,8 @@ int main(int argc, char* argv[]) {
 // Game loop
 ////////////////////////////////////////////////////////////////////////////////
 	std::cout << "Game start!" << std::endl;
-	
+	int timeStart = SDL_GetTicks() / 1000; 
+
 	// Play music loop
 	if(!nosound) {
 		channel = Mix_PlayChannel(-1, music, -1);
@@ -1249,7 +1250,7 @@ int main(int argc, char* argv[]) {
 
 		// Update title with time if gamemode is timelimit
 		if(gamemode == timelimit) {
-			time = SDL_GetTicks() / 1000;
+			time = SDL_GetTicks() / 1000 -timeStart;
 
 			std::stringstream ssLimit;
 			ssLimit << timeLimit;
