@@ -1,18 +1,39 @@
 #!/bin/bash
 
-echo " * Installing dependencies..."
+echo -ne " * Installing dependencies for "
 
-sudo aptitude install \
-build-essential \
-libsdl1.2-dev \
-libsdl1.2debian \
-libsdl-gfx1.2-4 \
-libsdl-gfx1.2-dev \
-libsdl-image1.2 \
-libsdl-image1.2-dev \
-libsdl-mixer1.2 \
-libsdl-mixer1.2-dev \
-libsdl-net1.2 \
-libsdl-net1.2-dev \
-libsdl-ttf2.0-0 \
-libsdl-ttf2.0-dev
+OS=$(lsb_release -si)
+
+if [ "$OS" == "Ubuntu" ]; then
+	echo "$OS"
+	sudo aptitude install \
+	build-essential \
+	libsdl1.2-dev \
+	libsdl1.2debian \
+	libsdl-gfx1.2-4 \
+	libsdl-gfx1.2-dev \
+	libsdl-image1.2 \
+	libsdl-image1.2-dev \
+	libsdl-mixer1.2 \
+	libsdl-mixer1.2-dev \
+	libsdl-net1.2 \
+	libsdl-net1.2-dev \
+	libsdl-ttf2.0-0 \
+	libsdl-ttf2.0-dev
+elif [ "$OS" == "Fedora" ]; then
+	echo "$OS"
+	sudo yum install \
+	gcc-c++ \
+	SDL \
+	SDL-devel \
+	SDL_gfx \
+	SDL_gfx-devel \
+	SDL_image \
+	SDL_image-devel \
+	SDL_net \
+	SDL_net-devel \
+	SDL_mixer \
+	SDL_mixer-devel \
+	SDL_ttf \
+	SDL_ttf-devel
+fi
