@@ -2,50 +2,51 @@ README
 ======
 
 This is an implementation of the game to The Gatherings Hardcore Programming Compo.
-  http://www.gathering.org/tg11/en/creative/competitions/hardcore-programming/
+  <http://www.gathering.org/tg11/en/creative/competitions/hardcore-programming/>
 
 "In the game, every player controls a thunderstorm, and the goal is to become
 the biggest thunderstorm by absorbing vapor from clouds and other players."
 
 Description of the original game can be found here:
-  http://www.gathering.org/tg11/en/creative/competitions/hardcore-programming/cloudwars/
+  <http://www.gathering.org/tg11/en/creative/competitions/hardcore-programming/cloudwars/>
 
 The network protocol is described here:
-  http://www.gathering.org/tg11/en/creative/competitions/hardcore-programming/cloudwars/protocol/
+  <http://www.gathering.org/tg11/en/creative/competitions/hardcore-programming/cloudwars/protocol/>
+
 
 This game has a couple of new features the original game don't have:
-*   Platform independent code!!
-*   Music and sound effect
-*   Retro mode (no gfx)
-*   Debug mode
-*   Fullscreen
-*   Can define width and height
-*   Can define tcp port
-*   Commandline arguments(?)
-*   Two player - p1: arrow keys p2: wsad (not the same wind function)
-*   ?
+  * Platform independent code!!
+  * Music and sound effect
+  * Retro mode (no gfx)
+  * Debug mode
+  * Fullscreen
+  * Can define width and height
+  * Can define tcp port
+  * Commandline arguments(?)
+  * Two player - p1: arrow keys p2: wsad (not the same wind function)
+  * ?
 
 The compo assignment is to create an Artificial Intelligence (AI) that plays the
 game.
 
 Client framework code:
-*   C# Framework:
-    https://github.com/downloads/bondehagen/CloudWars/ClientAI_CSharp.zip
-*   Java Framework:
-    https://github.com/downloads/bondehagen/CloudWars/ClientAI_Java.zip
+  * C# Framework:
+    <https://github.com/downloads/bondehagen/CloudWars/ClientAI_CSharp.zip>
+  * Java Framework:
+    <https://github.com/downloads/bondehagen/CloudWars/ClientAI_Java.zip>
 
 The support thread for the original game and AI-bots is:
-  http://forums.gathering.org/showthread.php?9420-Hardcore-Programming-Compo-Support-Thread
+  <http://forums.gathering.org/showthread.php?9420-Hardcore-Programming-Compo-Support-Thread>
 
 INSTALL
 -------
 The game has the following dependencies:
-*   SDL
-*   SDL_gfx
-*   SDL_image
-*   SDL_mixer
-*   SDL_net
-*   SDL_ttf
+  * SDL
+  * SDL_gfx
+  * SDL_image
+  * SDL_mixer
+  * SDL_net
+  * SDL_ttf
 
 You can also install the sprites from the original game, if not you have to run
 the game in retro (-r) mode!
