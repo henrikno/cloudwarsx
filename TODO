@@ -9,7 +9,7 @@ v1.0
 [ ] - add music and sound effects
 [ ] - add code for dead cloud sound effect
 [ ] - don't let thunderstorms (and rainclouds) spawn on top of each other 
-[ ] - add the wind debug code to the cloud class? It's only supporting one cloud now 
+[X] - add the wind debug code to the cloud class? It's only supporting one cloud now 
 [X] - if p1 and p2 is AI - hide the mouse cursor
 [ ] - swap std::string player1, player2 with some code in the cloud class
 [ ] - Give rainclouds name based on pos. in array and print name in debug mode

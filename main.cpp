@@ -64,8 +64,6 @@ int iteration = 0;
 bool done = false;
 
 int channel;
-int X1, Y1, X2, Y2;
-Uint32 COLOR;
 
 // Net
 int port = 1986;
@@ -244,6 +242,7 @@ class Cloud {
 		void drawVapor();
 		void drawVelocity();
 		void drawPosition();
+		void drawWind();
 
 	//private:
 		int player;
@@ -251,6 +250,9 @@ class Cloud {
 		float vx, vy; // The vector [vx,vy] is the velocity of the cloud
 		float vapor; // The amount of vapor in the cloud
 		float radius() { return sqrt(vapor);} // radius is square root of vapor
+
+		int windX1, windY1, windX2, windY2;
+		Uint32 windColor;
 
 		bool alive;
 		std::string name;
@@ -262,6 +264,7 @@ class Cloud {
 		SDL_Surface *velocityY;
 		SDL_Surface *positionX;
 		SDL_Surface *positionY;
+		SDL_Surface *windXY;
 
 		types type;
 };
@@ -279,6 +282,7 @@ Cloud::Cloud(float pX, float pY, float vX, float vY, float V) {
 	velocityY = NULL;
 	positionX = NULL;
 	positionY = NULL;
+	windXY = NULL;
 }
 
 Cloud::~Cloud() {
@@ -289,7 +293,7 @@ Cloud::~Cloud() {
 	SDL_FreeSurface(velocityY);
 	SDL_FreeSurface(positionX);
 	SDL_FreeSurface(positionY);
-
+	SDL_FreeSurface(windXY);
 }
 void Cloud::draw() {
 	Uint32 color;
@@ -303,6 +307,19 @@ void Cloud::draw() {
 		color = 0x007F7F7F; // gray
 
 	drawCircle(screen, px, py, radius(), color);
+}
+
+void Cloud::drawWind() {
+	if((windX1 != 0) || (windY1 != 0)) {
+		drawLine(screen, windX1, windY1, windX2, windY2, windColor);
+
+		std::stringstream ss;
+		ss << "WIND(" << windX2-windX1 << ", " << windY2-windY1 << ")";
+		std::string s = ss.str();
+
+		windXY = TTF_RenderText_Solid(font, s.c_str(), textColor);
+		drawSurface(windX2, windY2, windXY, screen);
+	}
 }
 
 void Cloud::drawName() {
@@ -411,12 +428,12 @@ bool checkCollision(Cloud &A, Cloud &B) {
 
 int wind(int player, int x, int y) {
 
-	// draw line
+	// draw wind line
 	if(debug) {
-		X1 = cloud[player]->px;
-		Y1 = cloud[player]->py;
-		X2 = x+X1;
-		Y2 = y+Y1;
+		cloud[player]->windX1 = cloud[player]->px;
+		cloud[player]->windY1 = cloud[player]->py;
+		cloud[player]->windX2 = x+cloud[player]->windX1;
+		cloud[player]->windY2 = y+cloud[player]->windY1;
 	}
 
 	// The strength of the wind is calculated as sqrt(x*x+y*y).
@@ -426,7 +443,7 @@ int wind(int player, int x, int y) {
 	// If this happens, the WIND command is ignored.
 	if((strength < 1.0) || (strength > cloud[player]->vapor / 2)) {
 		if(debug)
-			COLOR = 0x00FF0000; // red
+			cloud[player]->windColor = 0x00FF0000; // red
 		return 1; // IGNORE
 
 	} else {
@@ -481,7 +498,7 @@ int wind(int player, int x, int y) {
 		}
 
 		if(debug)
-			COLOR = 0x0000FF00;
+			cloud[player]->windColor = 0x0000FF00;
 
 		return 0; // OK
 	}
@@ -1312,21 +1329,11 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
-			if((cloud[i]->type == human) || (cloud[i]->type == ai))
+			if((cloud[i]->type == human) || (cloud[i]->type == ai)) {
 				cloud[i]->drawName();
-		}
 
-		// Wind
-		if(debug) {
-			if((X1 != 0) || (Y1 != 0)) {
-				drawLine(screen, X1, Y1, X2, Y2, COLOR);
-
-				std::stringstream windXYss;
-				windXYss << "WIND(" << X2-X1 << ", " << Y2-Y1 << ")";
-				std::string windXYs = windXYss.str();
-
-				winner = TTF_RenderText_Solid(font, windXYs.c_str(), textColor);
-				drawSurface(X2, Y2, winner, screen);
+				if(debug)
+					cloud[i]->drawWind();
 			}
 		}
 
