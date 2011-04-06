@@ -62,6 +62,8 @@ Usage: ./cloudwarsx -m [deathmatch, timelimit] -1 [ai, human] -2 [ai, human]
   -s seconds    - time limit in seconds
   -1 ai / human - player 1
   -2 ai / human - player 2
+  -3            - player 3 - only ai
+  -4            - player 4 - only ai
   -l filename   - level filename
   -r            - enable retromode (no gfx)
   -x width      - set width

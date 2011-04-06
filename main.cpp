@@ -379,6 +379,8 @@ void usage() {
 	std::cout << "\t-s seconds\ttime limit in seconds" << std::endl;
 	std::cout << "\t-1 ai / human\tplayer 1" << std::endl;
 	std::cout << "\t-2 ai / human\tplayer 2" << std::endl;
+	std::cout << "\t-3\t\tplayer 3 - only ai" << std::endl;
+	std::cout << "\t-4\t\tplayer 4 - only ai" << std::endl;
 	std::cout << "\t-l filename\tlevel filename" << std::endl;
 	std::cout << "\t-r\t\tenable retromode (no gfx)" << std::endl;
 	std::cout << "\t-x width\tset width" << std::endl;
@@ -857,7 +859,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	char opt_char=0;
-	while((opt_char = getopt(argc, argv, "l:vndm:hs:1:2:rfx:y:p:")) != -1) {
+	while((opt_char = getopt(argc, argv, "l:vndm:hs:1:2:34rfx:y:p:")) != -1) {
 		switch(opt_char) {
 			case 'l':
 				loadLevel(optarg);
@@ -920,6 +922,12 @@ int main(int argc, char* argv[]) {
 				std::cout << "Player 2: " << player2 << std::endl;
 				break;
 			}
+
+			case '3':
+			break;
+
+			case '4':
+			break;
 
 			case 'h':
 				usage();
