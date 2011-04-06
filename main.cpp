@@ -1055,7 +1055,8 @@ int main(int argc, char* argv[]) {
 	screen = SDL_SetVideoMode(width, height, bpp, sdlFlags);
 	SDL_WM_SetCaption(title.c_str(), title.c_str());
 
-	//SDL_ShowCursor(0);
+	if((player1 == "AI") && (player2 == "AI"))
+		SDL_ShowCursor(0);
 
 	// Audio
 	int audio_rate = 22050;
