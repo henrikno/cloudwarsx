@@ -302,6 +302,10 @@ void Cloud::draw() {
 		color = 0x000000FF; // blue
 	else if(player == 2)
 		color = 0x00FF0000; // red
+	if(player == 3)
+		color = 0x00FF7F00; // orange
+	else if(player == 4)
+		color = 0x00800080; // purple
 
 	if(type == raincloud)
 		color = 0x007F7F7F; // gray
