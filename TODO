@@ -2,10 +2,10 @@ TODO
 
 v1.0
 [X] - Add license
-[ ] - Add markdown to the README - withs screenshots :)
+[ ] - Add markdown to the README - with screenshots :)
 [ ] - Disconnect abusive clients (GET_STATE maximum of 10 times per second)
 [ ] - Support up to 4 players
-[ ] - Error checking on SDL* init
+[X] - Error checking on SDL* init
 [ ] - add music and sound effects
 [ ] - add code for dead cloud sound effect
 [ ] - don't let thunderstorms (and rainclouds) spawn on top of each other 

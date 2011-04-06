@@ -214,12 +214,31 @@ SDL_Surface *loadImage(std::string filename) {
 
 	loadedImage = IMG_Load(filename.c_str());
 
-	if(loadedImage) {
+	if(!loadedImage) {
+		std::cerr << "Error: Unable to load image " << filename << ": " << SDL_GetError() << std::endl;
+		exit(1);
+	} else {
 		image = SDL_DisplayFormatAlpha(loadedImage);
 		SDL_FreeSurface(loadedImage);
 	}
 
 	return image;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Load font
+////////////////////////////////////////////////////////////////////////////////
+
+TTF_Font* loadFont(std::string filename, int size) {
+	TTF_Font* font;
+	font = TTF_OpenFont(filename.c_str(), size);
+
+	if(!font) {
+		std::cerr << "Error: Unable to load font " << filename << ": " << TTF_GetError() << std::endl;
+		exit(1);
+	}
+
+	return font;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -597,7 +616,11 @@ int server(void *data) {
 
 	bool playersConnected = false;
 
-	SDLNet_Init();
+	if(SDLNet_Init()) {
+		std::cerr << "Error: Unable to initialize SDL_net: " << SDLNet_GetError << std::endl;
+		exit(1);
+	}
+
 	SDLNet_SocketSet socketSet = SDLNet_AllocSocketSet(MAX_SOCKETS);
  
 	for(int loop = 0; loop < MAX_CLIENTS; loop++) {
@@ -1054,8 +1077,10 @@ int main(int argc, char* argv[]) {
 	sdlFlags = SDL_SWSURFACE;
 	int time = 0;
 
-	// SDL
-	SDL_Init(SDL_INIT_EVERYTHING);
+	if(SDL_Init(SDL_INIT_EVERYTHING)) {
+		std::cerr << "Error: Unable to initialize SDL: " << SDL_GetError << std::endl;
+		exit(1);
+	}
 
 	if(fullscreen) {
 		sdlFlags |= SDL_FULLSCREEN;
@@ -1064,6 +1089,12 @@ int main(int argc, char* argv[]) {
 	}
 
 	screen = SDL_SetVideoMode(width, height, bpp, sdlFlags);
+
+	if(!screen) {
+		std::cerr << "Error: Unable to set video mode: " << SDL_GetError << std::endl;
+		exit(1);
+	}
+
 	SDL_WM_SetCaption(title.c_str(), title.c_str());
 
 	if((cloud[0]->type == ai) && (cloud[1]->type == ai))
@@ -1075,34 +1106,33 @@ int main(int argc, char* argv[]) {
 	int audio_channels = 2;
 	int audio_buffers = 4096;
 
-	Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers);
+	if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
+		std::cerr << "Error: Unable to set up audio: " << SDL_GetError << std::endl;
+		exit(1);
+	}
 
 	// Music and sounds
 	waitingMusic = Mix_LoadMUS("think.mp3");
-	if(!waitingMusic)
-		nosound = true;
-
 	bounceSound = Mix_LoadMUS("bounce.mp3");
-	if(!bounceSound)
-		nosound = true;
-
 	absorbSound = Mix_LoadMUS("absorb.aif");
-	if(!absorbSound)
-		nosound = true;
-
 	music = Mix_LoadWAV("music.wav");
-	if(!music)
+	winnerSound = Mix_LoadWAV("winner.wav");
+
+	if((!waitingMusic) || (!bounceSound) || (!absorbSound) || (!music) || (!winnerSound))
 		nosound = true;
 
-	winnerSound = Mix_LoadWAV("winner.wav");
-	if(!winnerSound)
-		nosound = true;
+	if(nosound)
+		std::cout << "Turing off music and sound!" << std::endl;
 
 	// Font
-	TTF_Init();
-	font = TTF_OpenFont("LiberationMono-Bold.ttf", 10);
-	fontWinner = TTF_OpenFont("LiberationMono-Bold.ttf", 40);
-	fontWaiting = TTF_OpenFont("LiberationMono-Bold.ttf", 25);
+	if(TTF_Init()) {
+		std::cerr << "Error: Unable to initialize SDL_ttf: " << TTF_GetError << std::endl;
+		exit(1);
+	}
+
+	font = loadFont("LiberationMono-Bold.ttf", 10);
+	fontWinner = loadFont("LiberationMono-Bold.ttf", 40);
+	fontWaiting = loadFont("LiberationMono-Bold.ttf", 25);
 
 	// Images
 	background = loadImage("sprites/bg.png");
