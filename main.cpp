@@ -486,13 +486,15 @@ int wind(int player, int x, int y) {
 }
 
 void wind(int player, std::string way) {
+	int vaporAmount = 25;
+
 	if(way == "up") {
-		cloud[player]->vapor -= absorb;
-		cloud[player]->vy -= 1;
+		cloud[player]->vapor -= vaporAmount;
+		cloud[player]->vy -= 10;
 
 		for(int i = 0; i < MAX_CLOUDS; i++) {
 			if(!cloud[i]->alive) {
-				cloud[i] = new Cloud(cloud[player]->px, cloud[player]->py + cloud[player]->radius() + absorb, -cloud[player]->vx, -cloud[player]->vy, absorb);
+				cloud[i] = new Cloud(cloud[player]->px, cloud[player]->py + cloud[player]->radius() + vaporAmount, -cloud[player]->vx, -cloud[player]->vy, vaporAmount);
 				cloud[i]->alive = true;
 				cloud[i]->type = raincloud;
 				cloud[i]->color = "gray";
@@ -502,12 +504,12 @@ void wind(int player, std::string way) {
 	}
 
 	else if(way == "down") {
-		cloud[player]->vapor -= absorb;
-		cloud[player]->vy += 1;
+		cloud[player]->vapor -= vaporAmount;
+		cloud[player]->vy += 10;
 
 		for(int i = 0; i < MAX_CLOUDS; i++) {
 			if(!cloud[i]->alive) {
-				cloud[i] = new Cloud(cloud[player]->px, cloud[player]->py - cloud[player]->radius() - absorb, -cloud[player]->vx, -cloud[player]->vy, absorb);
+				cloud[i] = new Cloud(cloud[player]->px, cloud[player]->py - cloud[player]->radius() - vaporAmount, -cloud[player]->vx, -cloud[player]->vy, vaporAmount);
 				cloud[i]->alive = true;
 				cloud[i]->type = raincloud;
 				cloud[i]->color = "gray";
@@ -517,12 +519,12 @@ void wind(int player, std::string way) {
 	}
 
 	else if(way == "left") {
-		cloud[player]->vapor -= absorb;
-		cloud[player]->vx -= 1;
+		cloud[player]->vapor -= vaporAmount;
+		cloud[player]->vx -= 10;
 
 		for(int i = 0; i < MAX_CLOUDS; i++) {
 			if(!cloud[i]->alive) {
-				cloud[i] = new Cloud(cloud[player]->px + cloud[player]->radius() + absorb, cloud[player]->py, -cloud[player]->vx, -cloud[player]->vy, absorb);
+				cloud[i] = new Cloud(cloud[player]->px + cloud[player]->radius() + vaporAmount, cloud[player]->py, -cloud[player]->vx, -cloud[player]->vy, vaporAmount);
 				cloud[i]->alive = true;
 				cloud[i]->type = raincloud;
 				cloud[i]->color = "gray";
@@ -532,12 +534,12 @@ void wind(int player, std::string way) {
 	}
 
 	else if(way == "right") {
-		cloud[player]->vapor -= absorb;
-		cloud[player]->vx += 1;
+		cloud[player]->vapor -= vaporAmount;
+		cloud[player]->vx += 10;
 
 		for(int i = 0; i < MAX_CLOUDS; i++) {
 			if(!cloud[i]->alive) {
-				cloud[i] = new Cloud(cloud[player]->px - cloud[player]->radius() - absorb, cloud[player]->py, -cloud[player]->vx, -cloud[player]->vy, absorb);
+				cloud[i] = new Cloud(cloud[player]->px - cloud[player]->radius() - vaporAmount, cloud[player]->py, -cloud[player]->vx, -cloud[player]->vy, vaporAmount);
 				cloud[i]->alive = true;
 				cloud[i]->type = raincloud;
 				cloud[i]->color = "gray";

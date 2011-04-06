@@ -16,7 +16,7 @@ v1.0
 [ ] - change the ttf draw surface code for finding the middle of the screen from .length() to surface->w
 [ ] - the players name is lagging (1 px?) behind the cloud?
 [ ] - check for LiberationMono-Bold.ttf in system font path, if not download?
-[ ] - fix human keyboard input - vapor clouds spawns inside itself when a cloud moves
+[X] - fix human keyboard input - vapor clouds spawns inside itself when a cloud moves
 [ ] - Save level support
 [ ] - fix play-rounds.sh, so name var. takes names with space in it
 [ ] - fix memory leak(s).. chugging up ram while playing
