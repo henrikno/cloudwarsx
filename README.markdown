@@ -7,7 +7,7 @@ This is an implementation of the game to The Gatherings Hardcore Programming Com
 "In the game, every player controls a thunderstorm, and the goal is to become
 the biggest thunderstorm by absorbing vapor from clouds and other players."
 
-![Alt defualt](screenshot.png)
+![Alt defualt](https://github.com/oklien/cloudwarsx/raw/master/screenshot.png)
 
 Description of the original game can be found here:
 
@@ -31,9 +31,9 @@ This game has a couple of new features the original game don't have:
   * Two player - p1: arrow keys p2: wsad (not the same wind function)
   * ?
 
-![Alt debug](screenshot-debug.png)
+![Alt debug](https://github.com/oklien/cloudwarsx/raw/master/screenshot-debug.png)
 
-![Alt retro](screenshot-retro.png)
+![Alt retro](https://github.com/oklien/cloudwarsx/raw/master/screenshot-retro.png)
 
 The compo assignment is to create an Artificial Intelligence (AI) that plays the
 game.
