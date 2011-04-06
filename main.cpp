@@ -790,6 +790,9 @@ int server(void *data) {
 				}
 			}
 		}
+
+		SDL_Delay(10);
+
 	} while(!done);
 
 	SDLNet_FreeSocketSet(socketSet);
