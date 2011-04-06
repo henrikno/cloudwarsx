@@ -11,7 +11,8 @@ v1.0
 [ ] - don't let thunderstorms (and rainclouds) spawn on top of each other 
 [X] - add the wind debug code to the cloud class? It's only supporting one cloud now 
 [X] - if p1 and p2 is AI - hide the mouse cursor
-[ ] - swap std::string player1, player2 with some code in the cloud class
+[X] - swap std::string player1, player2 with some code in the cloud class
+[ ] - if level is defined after players (-1,-2), createCloud is ignored in player setup
 [ ] - Give rainclouds name based on pos. in array and print name in debug mode
 [ ] - change the ttf draw surface code for finding the middle of the screen from .length() to surface->w
 [ ] - the players name is lagging (1 px?) behind the cloud?

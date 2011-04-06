@@ -243,6 +243,7 @@ class Cloud {
 		void drawVelocity();
 		void drawPosition();
 		void drawWind();
+		std::string getType();
 
 	//private:
 		int player;
@@ -295,6 +296,16 @@ Cloud::~Cloud() {
 	SDL_FreeSurface(positionY);
 	SDL_FreeSurface(windXY);
 }
+
+std::string Cloud::getType() {
+	if(type == ai)
+		return "AI";
+	else if(type == human)
+		return "Human";
+	else
+		return "Unkown";
+}
+
 void Cloud::draw() {
 	Uint32 color;
 
@@ -868,9 +879,6 @@ void loadLevel(std::string filename) {
 int main(int argc, char* argv[]) {
 	gamemodes gamemode;
 
-	std::string player1;
-	std::string player2;
-
 ////////////////////////////////////////////////////////////////////////////////
 // Commandline Arguments
 ////////////////////////////////////////////////////////////////////////////////
@@ -916,31 +924,61 @@ int main(int argc, char* argv[]) {
 				debug=true;
 				break;
 
+			// Player 1
 			case '1': {
 				std::string player = optarg;
 
-				if(player == "ai")
-					player1 = "AI";
-				else if(player == "human")
-					player1 = "Human";
-				else
+				if(player == "ai") {
+					if(!level)
+						createCloud(0, vaporStart);
+					cloud[0]->name = "AI";
+					cloud[0]->type = ai;
+					cloud[0]->player = 1;
+					cloud[0]->color = "blue";
+					++aiPlayers;
+				} else if(player == "human") {
+					if(!level)
+						createCloud(0, vaporStart);
+					cloud[0]->name = "Player 1";
+					cloud[0]->type = human;
+					cloud[0]->player = 1;
+					cloud[0]->color = "blue";
+					++playerCount;
+				} else {
+					std::cout << "Error: Player 1 not defined!" << std::endl;
 					usage();
+				}
 
-				std::cout << "Player 1: " << player1 << std::endl;
+				std::cout << "Player 1: " << cloud[0]->getType() << std::endl;
 				break;
 			}
 
+			// Player 2
 			case '2': {
 				std::string player = optarg;
 
-				if(player == "ai")
-					player2 = "AI";
-				else if(player == "human")
-					player2 = "Human";
-				else
+				if(player == "ai") {
+					if(!level)
+						createCloud(1, vaporStart);
+					cloud[1]->name = "AI";
+					cloud[1]->type = ai;
+					cloud[1]->player = 2;
+					cloud[1]->color = "red";
+					++aiPlayers;
+				} else if(player == "human") {
+					if(!level)
+						createCloud(1, vaporStart);
+					cloud[1]->name = "Player 2";
+					cloud[1]->type = human;
+					cloud[1]->player = 2;
+					cloud[1]->color = "red";
+					++playerCount;
+				} else {
+					std::cout << "Error: Player 2 not defined!" << std::endl;
 					usage();
+				}
 
-				std::cout << "Player 2: " << player2 << std::endl;
+				std::cout << "Player 2: " << cloud[1]->getType() << std::endl;
 				break;
 			}
 
@@ -1003,55 +1041,7 @@ int main(int argc, char* argv[]) {
 		title = title + " - Deathmatch";
 	}
 
-	title = title + ": " + player1 + " vs " + player2;
-
-////////////////////////////////////////////////////////////////////////////////
-// Player setup
-////////////////////////////////////////////////////////////////////////////////
-
-	// Player 1
-	if(player1 == "Human") {
-		if(!level)
-			createCloud(0, vaporStart);
-		cloud[0]->name = "Player 1";
-		cloud[0]->type = human;
-		cloud[0]->player = 1;
-		cloud[0]->color = "blue";
-		++playerCount;
-	} else if(player1 == "AI") {
-		if(!level)
-			createCloud(0, vaporStart);
-		cloud[0]->name = "AI";
-		cloud[0]->type = ai;
-		cloud[0]->player = 1;
-		cloud[0]->color = "blue";
-		++aiPlayers;
-	} else {
-		std::cout << "Error: Player 1 not defined!" << std::endl;
-		usage();
-	}
-
-	// Player 2
-	if(player2 == "Human") {
-		if(!level)
-			createCloud(1, vaporStart);
-		cloud[1]->name = "Player 2";
-		cloud[1]->type = human;
-		cloud[1]->player = 2;
-		cloud[1]->color = "red";
-		++playerCount;
-	} else if(player2 == "AI") {
-		if(!level)
-			createCloud(1, vaporStart);
-		cloud[1]->name = "AI";
-		cloud[1]->type = ai;
-		cloud[1]->player = 2;
-		cloud[1]->color = "red";
-		++aiPlayers;
-	} else {
-		std::cout << "Error: Player 2 not defined!" << std::endl;
-		usage();
-	}
+	title = title + ": " + cloud[0]->getType() + " vs " + cloud[1]->getType();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Init
@@ -1076,7 +1066,7 @@ int main(int argc, char* argv[]) {
 	screen = SDL_SetVideoMode(width, height, bpp, sdlFlags);
 	SDL_WM_SetCaption(title.c_str(), title.c_str());
 
-	if((player1 == "AI") && (player2 == "AI"))
+	if((cloud[0]->type == ai) && (cloud[1]->type == ai))
 		SDL_ShowCursor(0);
 
 	// Audio
@@ -1154,8 +1144,7 @@ int main(int argc, char* argv[]) {
 // Start server and wait for AIs
 ////////////////////////////////////////////////////////////////////////////////
 
-	if(player1 == "AI" || player2 == "AI") {
-
+	if(cloud[0]->type == ai || cloud[1]->type == ai) {
 		thread = SDL_CreateThread(server, NULL);
 
 		std::string waitingP1, waitingP2;
@@ -1183,7 +1172,7 @@ int main(int argc, char* argv[]) {
 
 			SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0x00, 0x00, 0x00));
 
-			if((player1 == "AI") && (player2 == "AI")) {
+			if((cloud[0]->type == ai) && (cloud[1]->type == ai)) {
 				if(playerCount != 1) {
 					winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
 					drawSurface((width/2)-waitingP1.length()*7.5, height/2-20, winner, screen);
@@ -1195,10 +1184,10 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
-			else if(player1 == "AI") {
+			else if(cloud[0]->type == ai) {
 				winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
 				drawSurface((width/2)-waitingP1.length()*7.5, height/2, winner, screen);
-			} else if(player2 == "AI") {
+			} else if(cloud[1]->type == ai) {
 				winner = TTF_RenderText_Solid(fontWaiting, waitingP2.c_str(), textColor);
 				drawSurface((width/2)-waitingP2.length()*7.5, height/2, winner, screen);
 			}
@@ -1245,11 +1234,12 @@ int main(int argc, char* argv[]) {
 				if(event.button.button == SDL_BUTTON_LEFT) {
 					int x = event.button.x; 
 					int y = event.button.y;
-					if(player1 == "Human") {
+
+					if(cloud[0]->type == human) {
 						int px = x - cloud[0]->px;
 						int py = y - cloud[0]->py;
 						wind(0, px, py);
-					} else if(player2 == "Human") {
+					} else if(cloud[1]->type == human) {
 						int px = x - cloud[1]->px;
 						int py = y - cloud[1]->py;
 						wind(1, px, py);
@@ -1505,13 +1495,13 @@ int main(int argc, char* argv[]) {
 	if(Winner == 0)
 		winnerSS << "Draw!";
 	else if(Winner == 1)
-		winnerSS << cloud[0]->name << " (" << player1 << ") wins!";
+		winnerSS << cloud[0]->name << " (" << cloud[0]->getType() << ") wins!";
 	else if(Winner == 2)
-		winnerSS << cloud[1]->name << " (" << player2 << ") wins!";
+		winnerSS << cloud[1]->name << " (" << cloud[1]->getType() << ") wins!";
 	else if(Winner == 3)
-		winnerSS << cloud[2]->name << " (" << player1 << ") wins!";
+		winnerSS << cloud[2]->name << " (" << cloud[2]->getType() << ") wins!";
 	else if(Winner == 4)
-		winnerSS << cloud[3]->name << " (" << player2 << ") wins!";
+		winnerSS << cloud[3]->name << " (" << cloud[3]->getType() << ") wins!";
 
 	std::string winnerS = winnerSS.str();
 	std::cout << winnerS << std::endl;
