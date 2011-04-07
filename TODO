@@ -3,7 +3,7 @@ TODO
 v1.0
 [X] - Add license
 [ ] - Add markdown to the README - with screenshots :)
-[ ] - Disconnect abusive clients (GET_STATE maximum of 10 times per second)
+[x] - Disconnect abusive clients (GET_STATE maximum of 10 times per second)
 [ ] - Support up to 4 players
 [X] - Error checking on SDL* init
 [ ] - add music and sound effects

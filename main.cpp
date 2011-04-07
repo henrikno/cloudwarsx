@@ -624,6 +624,13 @@ int server(void *data) {
 
 	bool playersConnected = false;
 
+	int timer = SDL_GetTicks();
+	int tries[MAX_CLIENTS];
+
+	for(int i = 0; i < MAX_CLIENTS; i++) {
+		tries[i] = 0;
+	}
+
 	if(SDLNet_Init()) {
 		std::cerr << "Error: Unable to initialize SDL_net: " << SDLNet_GetError << std::endl;
 		exit(1);
@@ -731,8 +738,27 @@ int server(void *data) {
 						}
 					}
 
+					// Check for abusive clients (max 10 tries pr. sec)
+					for(int i = 0; i < MAX_CLIENTS; i++) {
+						if(tries[i] > 10) {
+							std::cout << "client " << i << " GET_STATE max tries exceeded (>10) - setting vapor to 0" << std::endl;
+							cloud[i]->vapor = 0;
+						}
+					}
+
+					// Reset the get state counter each second
+					if((SDL_GetTicks() - timer) > 1000) {
+						for(int i = 0; i < MAX_CLIENTS; i++) {
+							tries[i] = 0;
+							timer = SDL_GetTicks(); // reset the timer
+						}
+					}
+
 					// GET_STATE
 					if(s == "GET_STATE") {
+
+						++tries[clientNumber];
+
 						std::stringstream begin;
 						begin << "BEGIN_STATE " << iteration << std::endl;
 						std::string Begin = begin.str();
