@@ -353,12 +353,14 @@ void Cloud::drawWind() {
 
 		windXY = TTF_RenderText_Solid(font, s.c_str(), textColor);
 		drawSurface(windX2, windY2, windXY, screen);
+		SDL_FreeSurface(windXY);
 	}
 }
 
 void Cloud::drawName() {
 	playerName = TTF_RenderText_Solid(font, name.c_str(), textColor);
 	drawSurface(px - name.length() * 2, py + radius() + 5, playerName, screen);
+	SDL_FreeSurface(playerName);
 }
 
 void Cloud::drawVapor() {
@@ -368,6 +370,7 @@ void Cloud::drawVapor() {
 
 	vaporAmount = TTF_RenderText_Solid(font, vs.c_str(), textColor);
 	drawSurface(px - vs.length() * 2, py - radius() - 10, vaporAmount, screen);
+	SDL_FreeSurface(vaporAmount);
 }
 
 void Cloud::drawVelocity() {
@@ -381,9 +384,11 @@ void Cloud::drawVelocity() {
 
 	velocityX = TTF_RenderText_Solid(font, vxs.c_str(), textColor);
 	drawSurface(px + radius() + 10, py - 5, velocityX, screen);
+	SDL_FreeSurface(velocityX);
 
 	velocityY = TTF_RenderText_Solid(font, vys.c_str(), textColor);
 	drawSurface(px + radius() + 10, py + 5, velocityY, screen);
+	SDL_FreeSurface(velocityY);
 }
 
 void Cloud::drawPosition() {
@@ -397,9 +402,11 @@ void Cloud::drawPosition() {
 
 	positionX = TTF_RenderText_Solid(font, pxs.c_str(), textColor);
 	drawSurface(px - radius() - 10 - pxs.length() * 6, py - 5, positionX, screen);
+	SDL_FreeSurface(positionX);
 
 	positionY = TTF_RenderText_Solid(font, pys.c_str(), textColor);
 	drawSurface(px - radius() - 10 - pxs.length() * 6, py + 5, positionY, screen);
+	SDL_FreeSurface(positionY);
 }
 
 void Cloud::show() {
@@ -415,6 +422,7 @@ void Cloud::show() {
 		cloudImage = zoomSurface(red, zoomx, zoomy, SMOOTHING_OFF);
 
 	drawSurface(px - diamenter / 2, py - diamenter / 2, cloudImage, screen);
+	SDL_FreeSurface(cloudImage);
 }
 
 Cloud *cloud[MAX_CLOUDS];
@@ -1209,20 +1217,24 @@ int main(int argc, char* argv[]) {
 				if(playerCount != 1) {
 					winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
 					drawSurface((width/2)-waitingP1.length()*7.5, height/2-20, winner, screen);
+					SDL_FreeSurface(winner);
 				}
 
 				if(playerCount != 2) {
 					winner = TTF_RenderText_Solid(fontWaiting, waitingP2.c_str(), textColor);
 					drawSurface((width/2)-waitingP2.length()*7.5, height/2+20, winner, screen);
+					SDL_FreeSurface(winner);
 				}
 			}
 
 			else if(cloud[0]->type == ai) {
 				winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
 				drawSurface((width/2)-waitingP1.length()*7.5, height/2, winner, screen);
+				SDL_FreeSurface(winner);
 			} else if(cloud[1]->type == ai) {
 				winner = TTF_RenderText_Solid(fontWaiting, waitingP2.c_str(), textColor);
 				drawSurface((width/2)-waitingP2.length()*7.5, height/2, winner, screen);
+				SDL_FreeSurface(winner);
 			}
 
 			SDL_Flip(screen);
@@ -1541,6 +1553,8 @@ int main(int argc, char* argv[]) {
 
 	winner = TTF_RenderText_Solid(fontWinner, winnerS.c_str(), textColor);
 	drawSurface((width/2)-winnerS.length()*12, height/2, winner, screen);
+	SDL_FreeSurface(winner);
+
 	SDL_Flip(screen);
 	SDL_Delay(2000);
 

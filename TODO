@@ -20,7 +20,7 @@ v1.0
 [X] - fix human keyboard input - vapor clouds spawns inside itself when a cloud moves
 [ ] - Save level support
 [ ] - fix play-rounds.sh, so name var. takes names with space in it
-[ ] - fix memory leak(s).. chugging up ram while playing
+[X] - fix memory leak(s).. chugging up ram while playing
 
 v1.1:
 [ ] - log games
