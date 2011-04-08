@@ -203,6 +203,23 @@ void drawSurface(int x, int y, SDL_Surface* source, SDL_Surface* destination) {
 
 	SDL_BlitSurface(source, NULL, destination, &offset);
 }
+void drawText(std::string text, int x, int y, TTF_Font *font, SDL_Color color) {
+	SDL_Surface *surf = TTF_RenderText_Solid(font, text.c_str(), color);
+	drawSurface(x, y, surf, screen);
+	SDL_FreeSurface(surf);
+}
+
+void drawNormalText(std::string text, int x, int y) {
+	drawText(text, x, y, font, textColor);
+}
+
+void drawWaitingText(std::string text, int x, int y) {
+	drawText(text, x, y, fontWaiting, textColor);
+}
+
+void drawWinnerText(std::string text, int x, int y) {
+	drawText(text, x, y, fontWinner, textColor);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Load Image
@@ -277,14 +294,7 @@ class Cloud {
 		bool alive;
 		std::string name;
 		std::string color;
-		SDL_Surface *cloudImage;
-		SDL_Surface *playerName;
 		SDL_Surface *vaporAmount;
-		SDL_Surface *velocityX;
-		SDL_Surface *velocityY;
-		SDL_Surface *positionX;
-		SDL_Surface *positionY;
-		SDL_Surface *windXY;
 
 		types type;
 };
@@ -295,25 +305,11 @@ Cloud::Cloud(float pX, float pY, float vX, float vY, float V) {
 	vx = vX;
 	vy = vY;
 	vapor = V;
-	cloudImage = NULL;
-	playerName = NULL;
 	vaporAmount = NULL;
-	velocityX = NULL;
-	velocityY = NULL;
-	positionX = NULL;
-	positionY = NULL;
-	windXY = NULL;
 }
 
 Cloud::~Cloud() {
-	SDL_FreeSurface(cloudImage);
-	SDL_FreeSurface(playerName);
 	SDL_FreeSurface(vaporAmount);
-	SDL_FreeSurface(velocityX);
-	SDL_FreeSurface(velocityY);
-	SDL_FreeSurface(positionX);
-	SDL_FreeSurface(positionY);
-	SDL_FreeSurface(windXY);
 }
 
 std::string Cloud::getType() {
@@ -351,16 +347,12 @@ void Cloud::drawWind() {
 		ss << "WIND(" << windX2-windX1 << ", " << windY2-windY1 << ")";
 		std::string s = ss.str();
 
-		windXY = TTF_RenderText_Solid(font, s.c_str(), textColor);
-		drawSurface(windX2, windY2, windXY, screen);
-		SDL_FreeSurface(windXY);
+		drawNormalText(s, windX2, windY2);
 	}
 }
 
 void Cloud::drawName() {
-	playerName = TTF_RenderText_Solid(font, name.c_str(), textColor);
-	drawSurface(px - name.length() * 2, py + radius() + 5, playerName, screen);
-	SDL_FreeSurface(playerName);
+	drawNormalText(name, px - name.length()*2, py + radius() + 5);
 }
 
 void Cloud::drawVapor() {
@@ -368,9 +360,7 @@ void Cloud::drawVapor() {
 	vss << std::fixed << std::setprecision(2) << vapor;
 	std::string vs = vss.str();
 
-	vaporAmount = TTF_RenderText_Solid(font, vs.c_str(), textColor);
-	drawSurface(px - vs.length() * 2, py - radius() - 10, vaporAmount, screen);
-	SDL_FreeSurface(vaporAmount);
+	drawNormalText(vs, px - vs.length()*2, py - radius() - 10);
 }
 
 void Cloud::drawVelocity() {
@@ -382,13 +372,9 @@ void Cloud::drawVelocity() {
 	vyss << "vy: " << std::fixed << std::setprecision(2) << vy; // to desimaler
 	std::string vys = vyss.str();
 
-	velocityX = TTF_RenderText_Solid(font, vxs.c_str(), textColor);
-	drawSurface(px + radius() + 10, py - 5, velocityX, screen);
-	SDL_FreeSurface(velocityX);
+	drawNormalText(vxs, px + radius() + 10, py - 5);
 
-	velocityY = TTF_RenderText_Solid(font, vys.c_str(), textColor);
-	drawSurface(px + radius() + 10, py + 5, velocityY, screen);
-	SDL_FreeSurface(velocityY);
+	drawNormalText(vys, px + radius() + 10, py + 5);
 }
 
 void Cloud::drawPosition() {
@@ -400,13 +386,9 @@ void Cloud::drawPosition() {
 	pyss << "py: " << (int)py;
 	std::string pys = pyss.str();
 
-	positionX = TTF_RenderText_Solid(font, pxs.c_str(), textColor);
-	drawSurface(px - radius() - 10 - pxs.length() * 6, py - 5, positionX, screen);
-	SDL_FreeSurface(positionX);
+	drawNormalText(pxs, px - radius() - 10 - pxs.length() * 6, py - 5);
 
-	positionY = TTF_RenderText_Solid(font, pys.c_str(), textColor);
-	drawSurface(px - radius() - 10 - pxs.length() * 6, py + 5, positionY, screen);
-	SDL_FreeSurface(positionY);
+	drawNormalText(pys, px - radius() - 10 - pxs.length() * 6, py + 5);
 }
 
 void Cloud::show() {
@@ -414,6 +396,7 @@ void Cloud::show() {
 	double zoomx = diamenter  / (float)gray->w;
 	double zoomy = diamenter / (float)gray->h;
 
+	SDL_Surface *cloudImage;
 	if(color == "gray")
 		cloudImage = zoomSurface(gray, zoomx, zoomy, SMOOTHING_OFF);
 	else if(color == "blue")
@@ -1241,26 +1224,18 @@ int main(int argc, char* argv[]) {
 
 			if((cloud[0]->type == ai) && (cloud[1]->type == ai)) {
 				if(playerCount != 1) {
-					winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
-					drawSurface((width/2)-waitingP1.length()*7.5, height/2-20, winner, screen);
-					SDL_FreeSurface(winner);
+					drawWaitingText(waitingP1, (width/2)-waitingP1.length()*7.5, height/2-20);
 				}
 
 				if(playerCount != 2) {
-					winner = TTF_RenderText_Solid(fontWaiting, waitingP2.c_str(), textColor);
-					drawSurface((width/2)-waitingP2.length()*7.5, height/2+20, winner, screen);
-					SDL_FreeSurface(winner);
+					drawWaitingText(waitingP2, (width/2)-waitingP2.length()*7.5, height/2+20);
 				}
 			}
 
 			else if(cloud[0]->type == ai) {
-				winner = TTF_RenderText_Solid(fontWaiting, waitingP1.c_str(), textColor);
-				drawSurface((width/2)-waitingP1.length()*7.5, height/2, winner, screen);
-				SDL_FreeSurface(winner);
+				drawWaitingText(waitingP1, (width/2)-waitingP1.length()*7.5, height/2);
 			} else if(cloud[1]->type == ai) {
-				winner = TTF_RenderText_Solid(fontWaiting, waitingP2.c_str(), textColor);
-				drawSurface((width/2)-waitingP2.length()*7.5, height/2, winner, screen);
-				SDL_FreeSurface(winner);
+				drawWaitingText(waitingP2, (width/2)-waitingP2.length()*7.5, height/2);
 			}
 
 			SDL_Flip(screen);
@@ -1577,9 +1552,7 @@ int main(int argc, char* argv[]) {
 	std::string winnerS = winnerSS.str();
 	std::cout << winnerS << std::endl;
 
-	winner = TTF_RenderText_Solid(fontWinner, winnerS.c_str(), textColor);
-	drawSurface((width/2)-winnerS.length()*12, height/2, winner, screen);
-	SDL_FreeSurface(winner);
+	drawWinnerText(winnerS, (width/2)-winnerS.length()*12, height/2);
 
 	SDL_Flip(screen);
 	SDL_Delay(2000);
